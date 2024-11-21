@@ -35,7 +35,7 @@
                 "Type": "None"
             },
             "PublisherSpec": {
-                "Type": "IPFS"
+                "Type": "local"
             },
             "Resources": {
                 "CPU": "3",
