@@ -50,7 +50,6 @@
             "outputs": [
                 {
                     "Name": "outputs",
-                    "StorageSource": "IPFS",
                     "path": "/outputs"
                 }
             ]
