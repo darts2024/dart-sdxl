@@ -29,6 +29,10 @@ env:
   PUSH_TAG: ${{github.repository}}:latest
   REPO: ${{github.repository}}
 
+permissions:
+  contents: read
+  packages: write
+
 jobs:
   build-and-push-image:
     # concurrency:
@@ -39,9 +43,6 @@ jobs:
     # runs-on: hiro
     # runs-on: self-hosted //avast doesn't support docker even if installed
     # runs-on: ubuntu-latest
-    permissions:
-      contents: read
-      packages: write
 
     steps:
       - name: Free Space Before
@@ -144,7 +145,7 @@ jobs:
           build-args: HUGGINGFACE_TOKEN=${{secrets.HUGGINGFACE_TOKEN}}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels}}
-          github-token: ${{github.token}}
+          github-token: ${{secrets.GITHUB_TOKEN}}
 
           # cache-from: type=registry,ref=user/app:latest
           # cache-to: type=inline
