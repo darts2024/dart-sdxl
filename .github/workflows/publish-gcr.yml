@@ -3,6 +3,7 @@ on:
   push:
     branches:
       - main
+      - ci/**
     tags:
 
   pull_request:
@@ -15,24 +16,21 @@ on:
         type: choice
         description: "Operating system to run the job on"
         options:
-          - self-hosted
           - ubuntu-latest
+          - self-hosted
         required: true
 
 # concurrency:
 #   group: ${{ github.workflow }}-${{ github.ref }}-${{github.event.inputs.runs-on }}
 #   cancel-in-progress: false
-
-env:
-  REGISTRY: ghcr.io
-  IMAGE_NAME: ${{ github.repository }}
-  PUSH_TAG: ${{github.repository}}:latest
-  REPO: ${{github.repository}}
-  GITHUB_TOKEN: ${{secrets.TOKEN_GITHUB}}
-
 permissions:
   contents: read
   packages: write
+
+env:
+  REGISTRY: ghcr.io
+  PUSH_TAG: ${{github.repository}}:latest
+  REPO: ${{github.repository}}
 
 jobs:
   build-and-push-image:
@@ -44,7 +42,6 @@ jobs:
     # runs-on: hiro
     # runs-on: self-hosted //avast doesn't support docker even if installed
     # runs-on: ubuntu-latest
-
     steps:
       - name: Free Space Before
         run: |
@@ -95,10 +92,6 @@ jobs:
           fetch-depth: 1
       #          fetch-tags: true
 
-      - uses: docker-practice/actions-setup-docker@master
-        if: ${{  github.event.inputs.runs-on ||  'ubuntu-latest' != 'ubuntu-latest' }}
-        timeout-minutes: 12
-
       - name: Log in to the Container registry
         uses: docker/login-action@v3
         with:
@@ -106,15 +99,14 @@ jobs:
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
 
-          # https://github.com/marketplace/actions/docker-metadata-action#images-input
       - name: Extract metadata (tags, labels) for Docker
         id: meta
         uses: docker/metadata-action@v5
         with:
           # base for tags
           images: |
+            ${{ env.REGISTRY }}/${{github.repository}}
             ${{ env.REGISTRY }}/${{github.repository_owner}}/sdxl
-            ${{ env.REGISTRY}}/${{github.repository_owner}}/stable-diffusion
 
           tags: |
             type=schedule
@@ -144,7 +136,7 @@ jobs:
           build-args: HUGGINGFACE_TOKEN=${{secrets.HUGGINGFACE_TOKEN}}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels}}
-          github-token: ${{github.token}}
+          github-token: ${{ secrets.GITHUB_TOKEN}}
 
           # cache-from: type=registry,ref=user/app:latest
           # cache-to: type=inline
