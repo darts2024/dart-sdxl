@@ -113,8 +113,8 @@ jobs:
         with:
           # base for tags
           images: |
-            ${{ env.REGISTRY }}/${{env.IMAGE_NAME}}
             ${{ env.REGISTRY }}/sdxl
+            ${{ env.REGISTRY }}/${{env.IMAGE_NAME}}
             ${{ env.REGISTRY}}/${{github.repository_owner}}/stable-diffusion
 
           tags: |
@@ -145,7 +145,7 @@ jobs:
           build-args: HUGGINGFACE_TOKEN=${{secrets.HUGGINGFACE_TOKEN}}
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels}}
-          github-token: ${{secrets.GITHUB_TOKEN}}
+          github-token: ${{github.token}}
 
           # cache-from: type=registry,ref=user/app:latest
           # cache-to: type=inline
