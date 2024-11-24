@@ -28,6 +28,7 @@ env:
   IMAGE_NAME: ${{ github.repository }}
   PUSH_TAG: ${{github.repository}}:latest
   REPO: ${{github.repository}}
+  GITHUB_TOKEN: ${{secrets.TOKEN_GITHUB}}
 
 permissions:
   contents: read
