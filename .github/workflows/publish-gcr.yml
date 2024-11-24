@@ -113,8 +113,7 @@ jobs:
         with:
           # base for tags
           images: |
-            ${{ env.REGISTRY }}/sdxl
-            ${{ env.REGISTRY }}/${{env.IMAGE_NAME}}
+            ${{ env.REGISTRY }}/${{github.repository_owner}}/sdxl
             ${{ env.REGISTRY}}/${{github.repository_owner}}/stable-diffusion
 
           tags: |
